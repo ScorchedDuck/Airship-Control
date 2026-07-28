@@ -1,5 +1,8 @@
 {
-    "command": 0.1,
+    "command": {
+        "version": 0.1,
+        "block": cc
+    },
     "startup": 0.1,
     "radar": 0.1,
     "bombbay": 0.1
