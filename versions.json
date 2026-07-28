@@ -1,9 +1,16 @@
 {
+    "startup": 0.2,
+
     "command": {
         "version": 0.1,
-        "block": cc
+        "block": "cc"
     },
-    "startup": 0.1,
-    "radar": 0.1,
-    "bombbay": 0.1
+    "radar": {
+        "version": 0.1,
+        "block": "radar"
+    },
+    "bombbay": {
+        "version": 0.1,
+        "block": "bombbay"
+    }
 }
