@@ -1,16 +1,16 @@
 {
-    "startup": 0.2,
+    "startup": 0.3,
 
     "command": {
         "version": 0.1,
-        "block": "cc"
+        "idBlock": "computercraft:computer_advanced"
     },
     "radar": {
         "version": 0.1,
-        "block": "radar"
+        "idBlock": "create_radar:radar_plate_block"
     },
     "bombbay": {
         "version": 0.1,
-        "block": "bombbay"
+        "idBlock": "createbigcannons:log_cannon_chamber"
     }
 }
