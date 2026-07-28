@@ -19,11 +19,10 @@ end
 
 local versions = getVersions()
 
-for name, data in ipairs(versions) do
+for name, data in pairs(versions) do
     if name ~= "startup" then
-        print(data.idBlock)
         if data.idBlock == idBlock then
-            role = data
+            role = name
             break
         end
     end
