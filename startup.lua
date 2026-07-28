@@ -21,6 +21,7 @@ local versions = getVersions()
 
 for name, data in ipairs(versions) do
     if name ~= "startup" then
+        print(data.idBlock)
         if data.idBlock == idBlock then
             role = data
             break
