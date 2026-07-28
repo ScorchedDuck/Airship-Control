@@ -35,6 +35,8 @@ else
 end
 
 if role == "command" then
-    shell.run("/startup.lua")
     print("Running command script")
+    shell.run("/startup.lua")
+else
+    
 end

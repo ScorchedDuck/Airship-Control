@@ -1,16 +1,36 @@
 {
-    "startup": 0.5,
+    "startup": 0.51,
 
     "command": {
-        "version": 0.1,
-        "idBlock": "computercraft:computer_advanced"
+        "version": 0.10,
+        "commander": "",
+        "idBlock": "computercraft:computer"
+    },
+    "networkController": {
+        "version": 0.10,
+        "commander": "command",
+        "idBlock": "computercraft:wired_modem_full"
+    },
+
+    "radarCommander": {
+        "version": 0.10,
+        "commander": "networkController",
+        "idBlock": "create_radar:radar_dish_block"
     },
     "radar": {
-        "version": 0.1,
+        "version": 0.10,
+        "commander": "radarCommander",
         "idBlock": "create_radar:radar_plate_block"
     },
+
+    "bombbayCommander": {
+        "version": 0.10,
+        "commander": "networkController",
+        "idBlock": "createbigcannons:wrought_iron_cannon_chamber"
+    },
     "bombbay": {
-        "version": 0.1,
+        "version": 0.10,
+        "commander": "bombbayCommander",
         "idBlock": "createbigcannons:log_cannon_chamber"
     }
 }
