@@ -34,3 +34,8 @@ if role then
 else 
     error("No role found for block: " .. idBlock)
 end
+
+if role == "command" then
+    shell.run("/startup.lua")
+    print("Running command script")
+end
