@@ -4,6 +4,7 @@ local DEFAULT_STARTUP_PATH = "https://raw.githubusercontent.com/ScorchedDuck/Air
 local VARS = "vars.json"
 local DEFAULT_VARS = {
     currentStartupVersion = 0.00,
+    hideErrors = false,
 }
 
 local vars
@@ -133,7 +134,7 @@ while true do
         print(message.body.name .. " joined")
     end
 
-    if message and message.command == "error" then
+    if message and message.command == "error" and not vars.hideErrors then
         print(message.body.name .. " had an error - " .. message.body.text)
     end
 end
