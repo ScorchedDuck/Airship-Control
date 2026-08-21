@@ -156,3 +156,5 @@ local function inputLoop()
         end
     end
 end
+
+parallel.waitForAny(modemLoop, inputLoop)

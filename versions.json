@@ -2,7 +2,7 @@
     "startup": 0.64,
 
     "command": {
-        "version": 0.13,
+        "version": 0.14,
         "commander": "",
         "idBlock": "computercraft:computer_advanced"
     },
