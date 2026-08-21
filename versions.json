@@ -1,8 +1,8 @@
 {
-    "startup": 0.62,
+    "startup": 0.63,
 
     "command": {
-        "version": 0.10,
+        "version": 0.11,
         "commander": "",
         "idBlock": "computercraft:computer_advanced"
     },

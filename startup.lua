@@ -63,7 +63,13 @@ local function getScript(role)
     local response = http.get(PATH .. "/" .. role .. "/run.lua")
     if not response then
         print("Couldn't download ".. PATH .. "/" .. role .. "/run.lua - entering reboot loop")
-        modem.transmit(100, 0, {command = "info", body = {"error"}, text = role})
+        modem.transmit(100, 0, {
+            command = "error", 
+            body = {
+                name = role, 
+                text = "Couldn't download ".. PATH .. "/" .. role .. "/run.lua"
+            }
+        })
         while true do
             local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
             if message and message.command == "reboot" then
@@ -102,12 +108,24 @@ end
 
 if onlineVersion ~= vars.currentVersion then
     print("New version available: " .. onlineVersion)
+    
+    getScript(role)
     vars.currentVersion = onlineVersion
     updateVars()
-
-    getScript(role)
 end
 
-modem.transmit(100, 0, {command = "info", body = {"join"}, text = role})
+modem.transmit(100, 0, {command = "join", body = {name = role, text = ""}})
 
 shell.run("run.lua")
+
+modem.transmit(100, 0, {command = "error", body = {name = role, text = "Run script failed"}})
+
+print("Something went wrong, entering reboot loop")
+
+while true do
+    local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
+    if message and message.command == "reboot" then
+        print("Rebooting...")
+        os.reboot()
+    end
+end

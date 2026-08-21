@@ -3,7 +3,7 @@ local DEFAULT_STARTUP_PATH = "https://raw.githubusercontent.com/ScorchedDuck/Air
 
 local VARS = "vars.json"
 local DEFAULT_VARS = {
-    currentStartupVersion = "0.00",
+    currentStartupVersion = 0.00,
 }
 
 local vars
@@ -129,13 +129,11 @@ while true do
         os.reboot()
     end
 
-    if message and message.command == "info" then
-        if message.body and message.body == "join" then
-            print(message.text .. " is joining the network")
-        elseif message.body and message.body == "error" then
-            print(message.text .. " has failed to join")
-        else
-            print("Received unknown info message: " .. textutils.serializeJSON(message))
-        end
+    if message and message.command == "join" then
+        print(message.body.name .. " joined")
+    end
+
+    if message and message.command == "error" then
+        print(message.body.name .. " had an error - " .. message.body.text)
     end
 end
