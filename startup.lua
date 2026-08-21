@@ -8,7 +8,7 @@ local idBlock = sensor.getBlock()
 local role
 
 local VARS = "vars.json"
-local DEFAULT_VARS = {currentVersion = "0.00"}
+local DEFAULT_VARS = {currentVersion = 0.00}
 local vars
 
 
@@ -99,7 +99,7 @@ if not role or not onlineVersion then
     error("Something failed for role or version")
 end
 
-if onlineVersion > vars.currentVersion then
+if onlineVersion ~= vars.currentVersion then
     print("New version available: " .. onlineVersion)
     vars.currentVersion = onlineVersion
     updateVars()
