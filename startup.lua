@@ -91,6 +91,7 @@ for name, data in pairs(versions) do
     if name ~= "startup" and data.idBlock == idBlock then
         role = name
         onlineVersion = data.version
+        print(data.version)
         break
     end
 end
