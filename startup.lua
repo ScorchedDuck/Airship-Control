@@ -61,7 +61,7 @@ end
 
 local function getScript(role)
     local response = http.get(PATH .. "/" .. role .. "/run.lua")
-    if not response then
+    if not response or response.getResponseCode() ~= 200 then
         print("Couldn't download ".. PATH .. "/" .. role .. "/run.lua - entering reboot loop")
         modem.transmit(100, 0, {
             command = "error", 
