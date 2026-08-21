@@ -4,7 +4,7 @@
     "command": {
         "version": 0.10,
         "commander": "",
-        "idBlock": "computercraft:computer"
+        "idBlock": "computercraft:computer_advanced"
     },
     "networkController": {
         "version": 0.10,
