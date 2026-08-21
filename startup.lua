@@ -97,7 +97,6 @@ for name, data in pairs(versions) do
     if name ~= "startup" and data.idBlock == idBlock then
         role = name
         onlineVersion = data.version
-        print(data.version)
         break
     end
 end
@@ -116,6 +115,7 @@ end
 
 modem.transmit(100, 0, {command = "join", body = {name = role, text = ""}})
 
+print("Running " .. role .. " script")
 shell.run("run.lua")
 
 modem.transmit(100, 0, {command = "error", body = {name = role, text = "Run script failed"}})

@@ -123,18 +123,36 @@ end
 
 updateVars()
 
-while true do
-    local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
-    if message and message.command == "reboot" then
-        print("Rebooting...")
-        os.reboot()
-    end
+local function modemLoop()
+    while true do
+        local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
+        if message and message.command == "reboot" then
+            print("Rebooting...")
+            os.reboot()
+        end
 
-    if message and message.command == "join" then
-        print(message.body.name .. " joined")
-    end
+        if message and message.command == "join" then
+            print(message.body.name .. " joined")
+        end
 
-    if message and message.command == "error" and not vars.hideErrors then
-        print(message.body.name .. " had an error - " .. message.body.text)
+        if message and message.command == "error" and not vars.hideErrors then
+            print(message.body.name .. " had an error - " .. message.body.text)
+        end
+    end
+end
+
+local function inputLoop()
+    while true do
+        print("Enter 'reboot' to reboot or 'hideErrors' to toggle error messages:")
+        local input = read()
+        if input == "reboot" then
+            print("Rebooting...")
+            modem.transmit(100, 0, {command = "reboot", body = {}})
+            os.reboot()
+        elseif input == "hideErrors" then
+            vars.hideErrors = not vars.hideErrors
+            updateVars()
+            print("Hide errors set to: " .. tostring(vars.hideErrors))
+        end
     end
 end
