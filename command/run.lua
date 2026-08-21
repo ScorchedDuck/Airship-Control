@@ -9,6 +9,8 @@ local DEFAULT_VARS = {
 local vars
 
 local startupDisk = peripheral.getName(peripheral.find("drive"))
+local modem = peripheral.find("modem")
+modem.open(100)
 
 local function getVersions()
     local response = http.get(VERSIONS_PATH)
@@ -119,3 +121,21 @@ else
 end
 
 updateVars()
+
+while true do
+    local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
+    if message and message.command == "reboot" then
+        print("Rebooting...")
+        os.reboot()
+    end
+
+    if message and message.command == "info" then
+        if message.body and message.body == "join" then
+            print(message.text .. " is joining the network")
+        elseif message.body and message.body == "error" then
+            print(message.text .. " has failed to join")
+        else
+            print("Received unknown info message: " .. textutils.serializeJSON(message))
+        end
+    end
+end

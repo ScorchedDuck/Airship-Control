@@ -1,5 +1,5 @@
 {
-    "startup": 0.51,
+    "startup": 0.60,
 
     "command": {
         "version": 0.10,
@@ -32,5 +32,57 @@
         "version": 0.10,
         "commander": "bombbayCommander",
         "idBlock": "createbigcannons:log_cannon_chamber"
+    },
+
+    "propellerCommander": {
+        "version": 0.10,
+        "commander": "networkController",
+        "idBlock": "create:rotation_speed_controller"
+    },
+    "flPropeller": {
+        "version": 0.10,
+        "commander": "propellerCommander",
+        "idBlock": "minecraft:oak_fence"
+    },
+    "frPropeller": {
+        "version": 0.10,
+        "commander": "propellerCommander",
+        "idBlock": "minecraft:spruce_fence"
+    },
+    "blPropeller": {
+        "version": 0.10,
+        "commander": "propellerCommander",
+        "idBlock": "minecraft:jungle_fence"
+    },
+    "brPropeller": {
+        "version": 0.10,
+        "commander": "propellerCommander",
+        "idBlock": "minecraft:birch_fence"
+    },
+
+    "movementCommander": {
+        "version": 0.10,
+        "commander": "networkController",
+        "idBlock": "create:sequence_gearshift"
+    },
+    "flMovement": {
+        "version": 0.10,
+        "commander": "movementCommander",
+        "idBlock": "minecraft:oak_fence_gate"
+    },
+    "frMovement": {
+        "version": 0.10,
+        "commander": "movementCommander",
+        "idBlock": "minecraft:spruce_fence_gate"
+    },
+    "blMovement": {
+        "version": 0.10,
+        "commander": "movementCommander",
+        "idBlock": "minecraft:jungle_fence_gate"
+    },
+    "brMovement": {
+        "version": 0.10,
+        "commander": "movementCommander",
+        "idBlock": "minecraft:birch_fence_gate"
     }
 }
