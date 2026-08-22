@@ -32,12 +32,15 @@ end
 
 local function getVersions()
     local response = http.get(PATH .. "/versions.json")
-    if not response or response.readAll() == "" then
+    data = response.readAll()
+    if not response or data == "" then
         rebootLoop("Couldn't download versions.json - entering reboot loop")
     end
 
-    local data = textutils.unserializeJSON(response.readAll())
     response.close()
+
+    local data = textutils.unserializeJSON(data)
+    
 
     return data
 end 
@@ -78,18 +81,21 @@ end
 
 local function getScript(role)
     local response = http.get(PATH .. "/" .. role .. "/run.lua")
-    if not response or response.readAll() == "" then
+    data = response.readAll()
+    if not response or data == "" then
         rebootLoop("Couldn't download ".. PATH .. "/" .. role .. "/run.lua - entering reboot loop")
     end
+
+    response.close()
 
     if fs.exists("run.lua") then
         fs.delete("run.lua")
     end
 
     local file = fs.open("run.lua", "w")
-    file.write(response.readAll())
+    file.write(data)
     file.close()
-    response.close()
+    
 end 
 
 local versions = getVersions()
