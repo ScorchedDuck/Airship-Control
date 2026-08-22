@@ -136,7 +136,11 @@ local function modemLoop()
         end
 
         if message and message.command == "error" and not vars.hideErrors then
-            print(message.body.name .. " had an error - " .. message.body.text)
+            if message.body.name and message.body.text then
+                print(message.body.name .. " had an error - " .. message.body.text)
+            else
+                print("Received error message with missing fields")
+            end
         end
     end
 end
