@@ -11,12 +11,29 @@ local VARS = "vars.json"
 local DEFAULT_VARS = {currentVersion = 0.00}
 local vars
 
-
+local function rebootLoop(message)
+    print(message)
+    sleep(3)
+    modem.transmit(100, 0, {
+        command = "error", 
+        body = {
+            name = role, 
+            text = message
+        }
+    })
+    while true do
+        local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
+        if message and message.command == "reboot" then
+            print("Rebooting...")
+            os.reboot()
+        end
+    end
+end
 
 local function getVersions()
     local response = http.get(PATH .. "/versions.json")
-    if not response then
-        error("Couldn't download versions.json")
+    if not response or response.readAll() == "" then
+        rebootLoop("Couldn't download versions.json - entering reboot loop")
     end
 
     local data = textutils.unserializeJSON(response.readAll())
@@ -61,22 +78,8 @@ end
 
 local function getScript(role)
     local response = http.get(PATH .. "/" .. role .. "/run.lua")
-    if not response or response.getResponseCode() ~= 200 then
-        print("Couldn't download ".. PATH .. "/" .. role .. "/run.lua - entering reboot loop")
-        modem.transmit(100, 0, {
-            command = "error", 
-            body = {
-                name = role, 
-                text = "Couldn't download ".. PATH .. "/" .. role .. "/run.lua"
-            }
-        })
-        while true do
-            local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
-            if message and message.command == "reboot" then
-                print("Rebooting...")
-                os.reboot()
-            end
-        end
+    if not response or response.readAll() == "" then
+        rebootLoop("Couldn't download ".. PATH .. "/" .. role .. "/run.lua - entering reboot loop")
     end
 
     if fs.exists("run.lua") then
@@ -102,7 +105,7 @@ for name, data in pairs(versions) do
 end
 
 if not role or not onlineVersion then
-    error("Something failed for role or version")
+    rebootLoop("No role or version - entering reboot loop")
 end
 
 if onlineVersion ~= vars.currentVersion then
@@ -118,14 +121,4 @@ modem.transmit(100, 0, {command = "join", body = {name = role, text = ""}})
 print("Running " .. role .. " script")
 shell.run("run.lua")
 
-modem.transmit(100, 0, {command = "error", body = {name = role, text = "Run script failed"}})
-
-print("Something went wrong, entering reboot loop")
-
-while true do
-    local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
-    if message and message.command == "reboot" then
-        print("Rebooting...")
-        os.reboot()
-    end
-end
+rebootLoop("Run script failed - entering reboot loop")
