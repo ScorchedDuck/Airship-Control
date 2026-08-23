@@ -8,7 +8,7 @@ local idBlock = sensor.getBlock()
 local role
 
 local VARS = "vars.json"
-local DEFAULT_VARS = {currentVersion = 0.00}
+local DEFAULT_VARS = {currentVersion = 0.00, role = nil}
 local vars
 
 local function rebootLoop(message)
@@ -92,10 +92,19 @@ local function getScript(role)
         fs.delete("run.lua")
     end
 
-    local file = fs.open("run.lua", "w")
+    local file = fs.open("run.lua", "w")  
     file.write(data)
     file.close()
-    
+
+    if role == "command" then
+        local file = fs.open("startup.lua", "w")
+        file.write(data)
+        file.close()
+    end
+
+    if not fs.exists("run.lua") then
+        rebootLoop("Couldn't write run.lua - entering reboot loop")
+    end
 end 
 
 local versions = getVersions()
@@ -119,6 +128,7 @@ if onlineVersion ~= vars.currentVersion then
     
     getScript(role)
     vars.currentVersion = onlineVersion
+    vars.role = role
     updateVars()
 end
 

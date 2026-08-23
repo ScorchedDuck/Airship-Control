@@ -1,88 +1,76 @@
 {
-    "startup": 0.67,
+    "startup": 0.68,
 
     "command": {
         "version": 0.16,
-        "commander": "",
         "idBlock": "computercraft:computer_advanced"
     },
     "networkController": {
-        "version": 0.10,
-        "commander": "command",
+        "version": 0.11,
         "idBlock": "computercraft:wired_modem_full"
+    },
+    "monitor": {
+        "version": 0.11,
+        "idBlock": "computercraft:monitor_advanced"
     },
 
     "radarCommander": {
         "version": 0.10,
-        "commander": "networkController",
         "idBlock": "create_radar:radar_dish_block"
     },
     "radar": {
         "version": 0.10,
-        "commander": "radarCommander",
         "idBlock": "create_radar:radar_plate_block"
     },
 
     "bombbayCommander": {
         "version": 0.10,
-        "commander": "networkController",
         "idBlock": "createbigcannons:wrought_iron_cannon_chamber"
     },
     "bombbay": {
         "version": 0.10,
-        "commander": "bombbayCommander",
         "idBlock": "createbigcannons:log_cannon_chamber"
     },
 
     "propellerCommander": {
         "version": 0.10,
-        "commander": "networkController",
         "idBlock": "create:rotation_speed_controller"
     },
     "flPropeller": {
         "version": 0.10,
-        "commander": "propellerCommander",
         "idBlock": "minecraft:oak_fence"
     },
     "frPropeller": {
         "version": 0.10,
-        "commander": "propellerCommander",
         "idBlock": "minecraft:spruce_fence"
     },
     "blPropeller": {
         "version": 0.10,
-        "commander": "propellerCommander",
         "idBlock": "minecraft:jungle_fence"
     },
     "brPropeller": {
         "version": 0.10,
-        "commander": "propellerCommander",
         "idBlock": "minecraft:birch_fence"
     },
 
     "movementCommander": {
         "version": 0.10,
-        "commander": "networkController",
         "idBlock": "create:sequence_gearshift"
     },
     "flMovement": {
         "version": 0.10,
-        "commander": "movementCommander",
         "idBlock": "minecraft:oak_fence_gate"
     },
     "frMovement": {
         "version": 0.10,
-        "commander": "movementCommander",
         "idBlock": "minecraft:spruce_fence_gate"
     },
     "blMovement": {
         "version": 0.10,
-        "commander": "movementCommander",
         "idBlock": "minecraft:jungle_fence_gate"
     },
     "brMovement": {
         "version": 0.10,
-        "commander": "movementCommander",
         "idBlock": "minecraft:birch_fence_gate"
     }
 }
