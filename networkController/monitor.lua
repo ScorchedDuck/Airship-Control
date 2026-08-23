@@ -2,16 +2,24 @@ return {
     name = "Network",
 
     init = function(self, ctx)
-        self.ctx = ctx
+        self.ctx = ctx.ui
+        self.role = ctx.role
     end,
 
-    draw = function(self, box, width, height)
-        box:clear()
+    draw = function(self)
+        local ui = self.ctx
 
-        box:fill(1, 1, width, height, colors.black)
+        ui:clear(colors.black)
 
-        box:text(2, 2, "Network Controller", colors.white)
-        box:text(2, 4, "Status: ONLINE", colors.lime)
+        ui:fill(
+            1,
+            1,
+            ui.width,
+            ui.height,
+            colors.yellow
+        )
+
+        -- text will go here once we implement ui:text()
     end,
 
     click = function(self, x, y)

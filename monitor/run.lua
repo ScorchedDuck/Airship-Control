@@ -1,7 +1,6 @@
 local PIXEL_PATH = "https://raw.githubusercontent.com/9551-Dev/pixelbox_lite/refs/heads/master/pixelbox_lite.lua"
 local BASE_PATH = "https://raw.githubusercontent.com/ScorchedDuck/Airship-Control/refs/heads/main/"
 
-local disk = peripheral.find("drive")
 local monitor = peripheral.find("monitor")
 
 local modem = peripheral.find("modem")
@@ -36,15 +35,26 @@ local pixelbox = dofile("pixelbox.lua")
 
 local box = pixelbox.new(monitor)
 
-local diskPath = disk.getMountPath()
+local ctx = {}
 
-if fs.exists(diskPath .. "/monitor.txt") then
-    fs.delete(diskPath .. "/monitor.txt")
+ctx.width = box.width
+ctx.height = box.height
+
+function ctx:clear(color)
+    box:clear(color)
 end
 
-modem.transmit(102, 0, {
-    command = "monitor"
-}) 
+function ctx:setPixel(x, y, color)
+    box.canvas[y][x] = color
+end
+
+function ctx:fill(x, y, width, height, color)
+    for py = y, y + height - 1 do
+        for px = x, x + width - 1 do
+            box.canvas[py][px] = color
+        end
+    end
+end
 
 local function loadModule(role)
     local url = BASE_PATH .. role .. "/monitor.lua"
@@ -105,7 +115,6 @@ local function handlePing(message)
     local computer = computers[role]
 
     if not computer then
-
         print("Discovered monitor: " .. role)
 
         local module = loadModule(role)
@@ -123,13 +132,11 @@ local function handlePing(message)
 
         if computer.module.init then
             computer.module:init({
-                role = role
+                role = role,
+                ui = ctx
             })
         end
-
-        print("see " .. role)
     else
-        print("see " .. role)
         computer.lastSeen = os.clock()
     end
 end
@@ -138,7 +145,7 @@ local function removeOffline()
     local now = os.clock()
 
     for role, computer in pairs(computers) do
-        if now - computer.lastSeen > TIMEOUT then
+        if now - computer.lastSeen > 30 then
             print("Monitor offline: " .. role)
 
             computers[role] = nil
@@ -148,18 +155,13 @@ local function removeOffline()
 end
 
 local function draw()
-    box:clear()
-
-    local width, height = monitor.getSize()
-
-    -- For now, just draw the first available module
+    box:clear(colors.black)
 
     for role, computer in pairs(computers) do
-
         local module = computer.module
 
         if module and module.draw then
-            module:draw(box, width, height)
+            module:draw()
         end
 
         break
@@ -175,7 +177,7 @@ local function networkLoop()
         if channel == 102 then
             handlePing(message)
         end
-        if message.command == "reboot" then
+        if type(message) == "table" and message.command == "reboot" then
             os.reboot()
         end
     end
