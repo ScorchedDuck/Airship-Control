@@ -10,7 +10,7 @@
         "idBlock": "computercraft:wired_modem_full"
     },
     "monitor": {
-        "version": 0.12,
+        "version": 0.13,
         "idBlock": "computercraft:monitor_advanced"
     },
 
