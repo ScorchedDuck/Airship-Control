@@ -127,10 +127,10 @@ local function handlePing(message)
             })
         end
 
+        print("see " .. role)
     else
-
+        print("see " .. role)
         computer.lastSeen = os.clock()
-
     end
 end
 
@@ -170,14 +170,9 @@ end
 
 local function networkLoop()
     while true do
-        local event,
-              side,
-              channel,
-              replyChannel,
-              message,
-              distance = os.pullEvent("modem_message")
+        local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
 
-        if channel == MONITOR_CHANNEL then
+        if channel == 102 then
             handlePing(message)
         end
         if message.command == "reboot" then

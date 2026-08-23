@@ -94,9 +94,9 @@ local function monitor()
     while true do
         modem.transmit(102, 0, {
             command = "monitor",
-            role = ROLE
+            role = vars.role
         })
-        sleep(15)
+        sleep(10)
     end
 end
 
