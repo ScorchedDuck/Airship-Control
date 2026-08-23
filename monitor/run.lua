@@ -165,7 +165,7 @@ local function draw()
         break
     end
 
-    box:draw()
+    box:render()
 end
 
 local function networkLoop()
