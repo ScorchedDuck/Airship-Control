@@ -8,7 +8,7 @@ local modem = peripheral.find("modem")
 modem.open(100)
 modem.open(102) -- monitor channel
 
-local connected = {}
+local computers = {}
 
 local function downloadPixelBox()
     local response = http.get(PIXEL_PATH)
@@ -138,7 +138,6 @@ local function removeOffline()
     local now = os.clock()
 
     for role, computer in pairs(computers) do
-
         if now - computer.lastSeen > TIMEOUT then
             print("Monitor offline: " .. role)
 
