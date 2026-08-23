@@ -91,11 +91,13 @@ local function removeDeadComputers()
 end
 
 local function monitor()
-    modem.transmit(102, 0, {
-        command = "monitor",
-        role = ROLE
-    })
-    sleep(15)
+    while true do
+        modem.transmit(102, 0, {
+            command = "monitor",
+            role = ROLE
+        })
+        sleep(15)
+    end
 end
 
 loadVars()
