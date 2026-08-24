@@ -32,8 +32,11 @@ end
 
 local function getVersions()
     local response = http.get(PATH .. "/versions.json")
+    if not response then
+        rebootLoop("Couldn't download versions.json - entering reboot loop")
+    end
     data = response.readAll()
-    if not response or data == "" then
+    if data == "" then
         rebootLoop("Couldn't download versions.json - entering reboot loop")
     end
 
@@ -81,8 +84,11 @@ end
 
 local function getScript(role)
     local response = http.get(PATH .. "/" .. role .. "/run.lua")
+    if not response then
+        rebootLoop("Couldn't download ".. PATH .. "/" .. role .. "/run.lua - entering reboot loop")
+    end
     data = response.readAll()
-    if not response or data == "" then
+    if data == "" then
         rebootLoop("Couldn't download ".. PATH .. "/" .. role .. "/run.lua - entering reboot loop")
     end
 

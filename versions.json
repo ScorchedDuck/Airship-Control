@@ -1,5 +1,5 @@
 {
-    "startup": 0.68,
+    "startup": 0.69,
 
     "command": {
         "version": 0.16,
@@ -10,7 +10,7 @@
         "idBlock": "computercraft:wired_modem_full"
     },
     "monitor": {
-        "version": 0.16,
+        "version": 0.17,
         "idBlock": "computercraft:monitor_advanced"
     },
 

@@ -8,6 +8,8 @@ modem.open(100)
 modem.open(102) -- monitor channel
 
 local computers = {}
+local roles = {}
+local selected = nil
 
 local function downloadPixelBox()
     local response = http.get(PIXEL_PATH)
@@ -54,6 +56,12 @@ function ctx:fill(x, y, width, height, color)
             box.canvas[py][px] = color
         end
     end
+end
+
+function ctx:text(x, y, text, color)
+    monitor.setCursorPos(x, y)
+    monitor.setTextColor(color or colors.white)
+    monitor.write(text)
 end
 
 local function loadModule(role)
@@ -114,6 +122,10 @@ local function handlePing(message)
     local role = message.role
     local computer = computers[role]
 
+    if not selectedRole then
+        selectedRole = role
+    end
+
     if not computer then
         print("Discovered monitor: " .. role)
 
@@ -129,6 +141,8 @@ local function handlePing(message)
         }
 
         computers[role] = computer
+        table.insert(roles, role)
+        table.sort(roles)
 
         if computer.module.init then
             computer.module:init({
@@ -149,39 +163,126 @@ local function removeOffline()
             print("Monitor offline: " .. role)
 
             computers[role] = nil
+
+            for i, r in ipairs(roles) do
+                if r == role then
+                    table.remove(roles, i)
+                    break
+                end
+            end
+
+            table.sort(roles)
+
+            if selectedRole == role then
+                selectedRole = nil
+
+                for newRole in pairs(computers) do
+                    selectedRole = newRole
+                    break
+                end
+            end
+        end
+    end
+end
+
+local function handleTouch(x, y)
+    -- Top bar is rows 1-2
+    if y > 2 then
+        return
+    end
+
+    local currentX = 1
+
+    for role, computer in pairs(computers) do
+        local width = #role + 2
+
+        if x >= currentX and x < currentX + width then
+            selectedRole = role
+            return
         end
 
+        currentX = currentX + width
     end
 end
 
 local function draw()
     box:clear(colors.black)
 
-    for role, computer in pairs(computers) do
-        local module = computer.module
+    ctx:fill(
+        1,
+        1,
+        ctx.width,
+        2,
+        colors.gray
+    )
 
-        if module and module.draw then
-            module:draw()
+    local x = 1
+
+    for _, role in ipairs(roles) do
+        local computer = computers[role]
+        local width = #role + 2
+        local color = colors.lightGray
+
+        if role == selectedRole then
+            color = colors.blue
         end
 
-        break
+        ctx:fill(
+            x,
+            1,
+            width,
+            2,
+            color
+        )
+
+        ctx:text(
+            x + 1,
+            1,
+            role,
+            colors.white
+        )
+
+        x = x + width
+    end
+
+    if selectedRole then
+        local computer = computers[selectedRole]
+
+        if computer and computer.module and computer.module.draw then
+            computer.module:draw()
+        end
     end
 
     box:render()
 end
 
+
 local function networkLoop()
     while true do
-        local event, side, channel, replyChannel, message, distance = os.pullEvent("modem_message")
+        local event, a, b, c, d, e = os.pullEvent()
 
-        if channel == 102 then
-            handlePing(message)
-        end
-        if type(message) == "table" and message.command == "reboot" then
-            os.reboot()
+        if event == "modem_message" then
+            local channel = b
+            local message = e
+
+            if channel == 102 then
+                handlePing(message)
+            end
+
+            if type(message) == "table" and message.command == "reboot" then
+                os.reboot()
+            end
+
+        elseif event == "monitor_touch" then
+            local side = a
+            local x = b
+            local y = c
+
+            if side == monitor then
+                handleTouch(x, y)
+            end
         end
     end
-
 end
 
 local function maintenanceLoop()
