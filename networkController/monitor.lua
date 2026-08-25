@@ -53,6 +53,7 @@ return {
         if self.current then
             print(self.current)
             for _, name in ipairs(self.current) do
+                print(name)
                 ui:text(2, y, name, colors.white)
                 y = y + 1
             end
