@@ -109,8 +109,6 @@ function network.get(id)
         return nil
     end
 
-    print(textutils.serialize(request.data))
-
     local data = request.data
     pendingRequests[id] = nil
     return data
