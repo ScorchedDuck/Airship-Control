@@ -30,6 +30,7 @@ return {
     end,
 
     text = function(self)
+        local data = nil
         local ui = self.ctx
 
         local y = math.floor(ui.barHeight / 3) + 2
@@ -37,13 +38,8 @@ return {
         ui:text(1, y, "Connected Computers:", colors.white)
 
         if self.requestId then
-            print("here")
-            local data = self.network.get(self.requestId)
-
-            print("still here")
+            data = self.network.get(self.requestId)
         end
-
-        print("DATA:", textutils.serialize(data))
 
         if data then
             self.current = {}
