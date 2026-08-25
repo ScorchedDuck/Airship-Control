@@ -40,7 +40,7 @@ return {
 
         local data = self.network.get(self.requestId)
 
-        if data and collected == false then
+        if #data > 0 and collected == false then
             self.collected = true
 
             self.current = {}
@@ -52,7 +52,7 @@ return {
             end
         end
 
-        if self.current then
+        if #self.current > 0 then
             for _, name in ipairs(self.current) do
                 ui:text(2, y, name, colors.white)
                 y = y + 1
