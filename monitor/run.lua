@@ -76,6 +76,9 @@ function ctx:text(x, y, text, color)
     monitor.write(text)
 end
 
+local VARS = "vars.json"
+local vars = {}
+
 local requestId = 0
 local pendingRequests = {}
 
