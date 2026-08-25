@@ -18,6 +18,8 @@ return {
             self.requestId = self.network.request("registered")
             self.next = os.clock() + 10
             self.collected = false
+
+            print("request")
         end
 
         ui:clear(colors.black)
@@ -45,7 +47,7 @@ return {
 
             self.current = {}
 
-            print("here1")
+            print("recieve")
 
             for name in pairs(data) do
                 self.current[#self.current + 1] = name
@@ -53,7 +55,7 @@ return {
         end
 
         if self.current then
-            print("here")
+            print("use")
             for _, name in ipairs(self.current) do
                 ui:text(2, y, name, colors.white)
                 y = y + 1
