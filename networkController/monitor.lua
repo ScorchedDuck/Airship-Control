@@ -50,7 +50,7 @@ return {
         end
 
         if self.current then
-            for _, name in ipairs(self.computers) do
+            for _, name in ipairs(self.current) do
                 ui:text(2, y, name, colors.white)
                 y = y + 1
             end
