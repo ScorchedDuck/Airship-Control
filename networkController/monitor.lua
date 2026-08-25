@@ -44,8 +44,8 @@ return {
         if data then
             self.current = {}
 
-            for name in pairs(data) do
-                self.current[#self.current + 1] = name
+            for id, data in pairs(data) do
+                self.current[#self.current + 1] = data.name
             end
 
             self.requestId = nil

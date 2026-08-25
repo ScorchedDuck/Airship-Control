@@ -55,7 +55,7 @@ local function process()
             local replyChannel = messageData.replyChannel
 
             if message and message.command == "ping" then
-                state.registered[message.body.name] = os.clock()
+                state.registered[message.body.computer] = {time = os.clock(), name = message.body.name}
 
             elseif message and message.command == "fetch" then
                 local requested = message.body.text
@@ -81,10 +81,10 @@ local function removeDeadComputers()
     while true do
         local now = os.clock()
 
-        for name, lastPing in pairs(state.registered) do
-            if now - lastPing > 15 then
-                state.registered[name] = nil
-                print(name .. " timed out")
+        for id, data in pairs(state.registered) do
+            if now - data.time > 15 then
+                state.registered[id] = nil
+                print(data.name .. " timed out")
             end
         end
 

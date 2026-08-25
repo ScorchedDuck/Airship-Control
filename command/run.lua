@@ -163,7 +163,7 @@ end
 
 local function maintenanceLoop()
     while true do
-        modem.transmit(101, 0, {command = "ping", body = {name = "command"}})
+        modem.transmit(101, 0, {command = "ping", body = {name = "command", computer = os.computerID()}})
         sleep(10)
     end
 end

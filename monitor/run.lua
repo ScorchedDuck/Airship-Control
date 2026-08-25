@@ -362,7 +362,7 @@ local function maintenanceLoop()
     while true do
         removeOffline()
         if nextPing <= os.clock() then
-            modem.transmit(101, 0, {command = "ping", body = {name = "monitor"}})
+            modem.transmit(101, 0, {command = "ping", body = {name = "monitor", computer = os.computerID()}})
             nextPing = os.clock() + 10
         end
         sleep(1)
