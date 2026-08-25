@@ -15,7 +15,7 @@ return {
 
         if os.clock() >= self.next then
             self.requestId = self.network.request("registered")
-            self.next = os.clock() + 10
+            self.next = os.clock() + 1
         end
 
         ui:clear(colors.black)
