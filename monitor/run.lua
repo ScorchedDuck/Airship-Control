@@ -12,7 +12,6 @@ modem.open(103) -- monitor response
 
 local computers = {}
 local roles = {}
-local selectedRole = nil
 
 local function downloadPixelBox()
     local response = http.get(PIXEL_PATH)
@@ -114,6 +113,30 @@ function network.get(id)
     return data
 end
 
+local function loadVars()
+    if not fs.exists(VARS) or fs.getSize(VARS) == 0 then
+        error("Vars file doesn't exist or is empty")
+    else
+        local file = fs.open(VARS, "r")
+        vars = textutils.unserializeJSON(file.readAll())
+        file.close()
+
+        if not vars then
+            error("Vars failed")
+        end
+
+        if not vars.selectedRole then
+            vars.selectedRole = nil
+        end
+    end
+end
+
+local function updateVars()
+    local file = fs.open(VARS, "w")
+    file.write(textutils.serializeJSON(vars))
+    file.close()
+end
+
 local function loadModule(role)
     local url = BASE_PATH .. role .. "/monitor.lua?t=" .. os.clock()
 
@@ -172,9 +195,10 @@ local function handlePing(message)
     local role = message.role
     local computer = computers[role]
 
-    if not selectedRole then
-        selectedRole = role
+    if not vars.selectedRole then
+        vars.selectedRole = role
     end
+    updateVars()
 
     if not computer then
         print("Discovered monitor: " .. role)
@@ -224,21 +248,22 @@ local function removeOffline()
 
             table.sort(roles)
 
-            if selectedRole == role then
-                selectedRole = nil
+            if vars.selectedRole == role then
+                vars.selectedRole = nil
 
                 for newRole in pairs(computers) do
-                    selectedRole = newRole
+                    vars.selectedRole = newRole
                     break
                 end
             end
+            updateVars()
         end
     end
 end
 
 local function handleTouch(x, y)
     if y > barHeight then
-        local computer = computers[selectedRole]
+        local computer = computers[vars.selectedRole]
 
         if computer and computer.module and computer.module.click then
             computer.module:click(x, y)
@@ -253,7 +278,7 @@ local function handleTouch(x, y)
         local currentIndex = 1
 
         for i, role in ipairs(roles) do
-            if role == selectedRole then
+            if role == vars.selectedRole then
                 currentIndex = i
                 break
             end
@@ -265,13 +290,14 @@ local function handleTouch(x, y)
             currentIndex = #roles
         end
 
-        selectedRole = roles[currentIndex]
+        vars.selectedRole = roles[currentIndex]
+        updateVars()
 
     elseif x > ctx.width - barWidth then
         local currentIndex = 1
 
         for i, role in ipairs(roles) do
-            if role == selectedRole then
+            if role == vars.selectedRole then
                 currentIndex = i
                 break
             end
@@ -283,15 +309,16 @@ local function handleTouch(x, y)
             currentIndex = 1
         end
 
-        selectedRole = roles[currentIndex]
+        vars.selectedRole = roles[currentIndex]
+        updateVars()
     end
 end
 
 local function draw()
     box:clear(colors.black)
 
-    if selectedRole then
-        local computer = computers[selectedRole]
+    if vars.selectedRole then
+        local computer = computers[vars.selectedRole]
 
         if computer and computer.module and computer.module.draw then
             computer.module:draw()
@@ -304,16 +331,16 @@ local function draw()
 
     box:render()
 
-    if selectedRole then
-        local computer = computers[selectedRole]
+    if vars.selectedRole then
+        local computer = computers[vars.selectedRole]
 
         if computer and computer.module and computer.module.draw then
             computer.module:text()
         end
     end
 
-    if selectedRole and computers[selectedRole] then
-        local name = computers[selectedRole].module.name
+    if vars.selectedRole and computers[vars.selectedRole] then
+        local name = computers[vars.selectedRole].module.name
         monitor.setCursorPos(math.floor((monitorWidth - #name) / 2) + 1, 1)
         monitor.setTextColor(colors.white)
         monitor.setBackgroundColor(colors.gray)
@@ -376,6 +403,7 @@ local function renderLoop()
     end
 end
 
+loadVars()
 
 parallel.waitForAll(
     networkLoop,
