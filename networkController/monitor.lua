@@ -14,9 +14,10 @@ return {
     draw = function(self)
         local ui = self.ctx
 
-        if os.clock() >= self.next and not self.requestId then
+        if os.clock() >= self.next and self.collected then
             self.requestId = self.network.request("registered")
             self.next = os.clock() + 10
+            self.collected = false
         end
 
         ui:clear(colors.black)
