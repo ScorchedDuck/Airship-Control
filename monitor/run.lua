@@ -73,7 +73,7 @@ end
 
 function ctx:text(x, y, text, color)
     monitor.setCursorPos(x, y)
-    monitor.setTextColor(color or colors.white)
+    monitor.setTextColor(color)
     monitor.write(text)
 end
 

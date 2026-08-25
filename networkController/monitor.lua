@@ -15,7 +15,7 @@ return {
 
         if os.clock() >= self.next then
             self.requestId = self.network.request("registered")
-            self.next = os.clock() + 1
+            self.next = os.clock() + 10
         end
 
         ui:clear(colors.black)
@@ -44,18 +44,16 @@ return {
         if data then
             self.current = {}
 
-            print("DATA:", textutils.serialize(data))
-
             for name in pairs(data) do
                 self.current[#self.current + 1] = name
             end
 
-            self.requestId = 0
+            self.requestId = nil
         end
 
         if #self.current > 0 then
             for _, name in ipairs(self.current) do
-                ui:text(2, y, name, colors.white)
+                ui:text(2, y+1, name, colors.white)
                 y = y + 1
             end
         end
