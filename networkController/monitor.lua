@@ -40,13 +40,12 @@ return {
 
         local data = self.network.get(self.requestId)
 
-        print("here")
-
         if data then
             self.collected = true
 
             self.current = {}
-            print("here")
+
+            print("here1")
 
             for name in pairs(data) do
                 self.current[#self.current + 1] = name
