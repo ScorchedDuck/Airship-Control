@@ -45,7 +45,7 @@ return {
             self.current = {}
 
             for name in pairs(data) do
-                current[#current + 1] = name
+                self.current[#self.current + 1] = name
             end
         end
 
