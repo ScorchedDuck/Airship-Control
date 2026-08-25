@@ -105,11 +105,15 @@ end
 function network.get(id)
     local request = pendingRequests[id]
 
-    if not request then
+    if not request or not request.data then
         return nil
     end
 
-    return request.data
+    print(textutils.serialize(request.data))
+
+    local data = request.data
+    pendingRequests[id] = nil
+    return data
 end
 
 local function loadModule(role)
@@ -333,10 +337,8 @@ local function networkLoop()
 
             if channel == 103 then
                 if type(message) == "table" and message.command == "return" then
-                    local request = pendingRequests[message.body.id]
-
-                    if request then
-                        request.data = message.body.text
+                    if pendingRequests[message.body.id] then
+                        pendingRequests[message.body.id].data = message.body.text
                     end
                 end
             end

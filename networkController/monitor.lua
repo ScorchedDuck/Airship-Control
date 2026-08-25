@@ -40,6 +40,8 @@ return {
             local data = self.network.get(self.requestId)
         end
 
+        print("DATA:", textutils.serialize(data))
+
         if data then
             self.current = {}
 
