@@ -34,16 +34,19 @@ return {
     text = function(self)
         local ui = self.ctx
 
-        local y = math.floor(ui.barHeight / 3) + 1
+        local y = math.floor(ui.barHeight / 3) + 2
 
         ui:text(1, y, "Connected Computers:", colors.white)
 
         local data = self.network.get(self.requestId)
 
+        print("here")
+
         if data then
             self.collected = true
 
             self.current = {}
+            print("here")
 
             for name in pairs(data) do
                 self.current[#self.current + 1] = name
@@ -51,6 +54,7 @@ return {
         end
 
         if self.current then
+            print("here")
             for _, name in ipairs(self.current) do
                 ui:text(2, y, name, colors.white)
                 y = y + 1
