@@ -53,7 +53,7 @@ return {
 
         if #self.current > 0 then
             for _, name in ipairs(self.current) do
-                ui:text(2, y+1, name, colors.white)
+                ui:text(2, y+1, "- " .. name, colors.white)
                 y = y + 1
             end
         end

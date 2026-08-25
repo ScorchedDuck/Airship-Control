@@ -2,7 +2,7 @@
     "startup": 0.69,
 
     "command": {
-        "version": 0.17,
+        "version": 0.18,
         "idBlock": "computercraft:computer_advanced"
     },
     "networkController": {
