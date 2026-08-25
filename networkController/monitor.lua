@@ -45,15 +45,15 @@ return {
 
             self.current = {}
 
+            print("DATA:", textutils.serialize(data))
+
             for name in pairs(data) do
                 self.current[#self.current + 1] = name
             end
         end
 
         if self.current then
-            print(self.current)
             for _, name in ipairs(self.current) do
-                print(name)
                 ui:text(2, y, name, colors.white)
                 y = y + 1
             end
