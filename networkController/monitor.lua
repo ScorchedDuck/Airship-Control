@@ -40,7 +40,7 @@ return {
 
         local data = self.network.get(self.requestId)
 
-        if #data > 0 and collected == false then
+        if data and #data > 0 and collected == false then
             self.collected = true
 
             self.current = {}
