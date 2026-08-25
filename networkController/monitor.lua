@@ -37,7 +37,10 @@ return {
         ui:text(1, y, "Connected Computers:", colors.white)
 
         if self.requestId then
+            print("here")
             local data = self.network.get(self.requestId)
+
+            print("still here")
         end
 
         print("DATA:", textutils.serialize(data))
