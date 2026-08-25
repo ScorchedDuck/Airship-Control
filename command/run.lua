@@ -161,4 +161,11 @@ local function inputLoop()
     end
 end
 
-parallel.waitForAny(modemLoop, inputLoop)
+local function maintenanceLoop()
+    while true do
+        modem.transmit(101, 0, {command = "ping", body = {name = "monitor"}})
+        sleep(10)
+    end
+end
+
+parallel.waitForAny(modemLoop, inputLoop, maintenanceLoop)

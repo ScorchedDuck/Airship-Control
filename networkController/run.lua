@@ -55,9 +55,6 @@ local function process()
             local replyChannel = messageData.replyChannel
 
             if message and message.command == "ping" then
-                modem.transmit(replyChannel, channel, {
-                    command = "pong"
-                }) 
                 state.registered[message.body.name] = os.clock()
 
             elseif message and message.command == "fetch" then
@@ -85,7 +82,7 @@ local function removeDeadComputers()
         local now = os.clock()
 
         for name, lastPing in pairs(state.registered) do
-            if now - lastPing > 10 then
+            if now - lastPing > 15 then
                 state.registered[name] = nil
                 print(name .. " timed out")
             end
