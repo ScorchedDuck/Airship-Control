@@ -2,14 +2,17 @@ local PIXEL_PATH = "https://raw.githubusercontent.com/9551-Dev/pixelbox_lite/ref
 local BASE_PATH = "https://raw.githubusercontent.com/ScorchedDuck/Airship-Control/refs/heads/main/"
 
 local monitor = peripheral.find("monitor")
+monitor.setTextScale(0.5)
+local monitorWidth, monitorHeight = monitor.getSize()
 
 local modem = peripheral.find("modem")
 modem.open(100)
 modem.open(102) -- monitor channel
+modem.open(103) -- monitor response
 
 local computers = {}
 local roles = {}
-local selected = nil
+local selectedRole = nil
 
 local function downloadPixelBox()
     local response = http.get(PIXEL_PATH)
@@ -41,9 +44,19 @@ local ctx = {}
 
 ctx.width = box.width
 ctx.height = box.height
+ctx.monitorWidth = monitorWidth
+ctx.monitorHeight = monitorHeight
+
+local barWidth = math.floor(ctx.width / 10)
+if barWidth % 2 == 1 then 
+    barWidth = barWidth - 1
+end
+local barHeight = 3
+
+ctx.barHeight = barHeight
 
 function ctx:clear(color)
-    box:clear(color)
+    box:clear(colors.black)
 end
 
 function ctx:setPixel(x, y, color)
@@ -62,6 +75,41 @@ function ctx:text(x, y, text, color)
     monitor.setCursorPos(x, y)
     monitor.setTextColor(color or colors.white)
     monitor.write(text)
+end
+
+local requestId = 0
+local pendingRequests = {}
+
+local network = {}
+
+function network.request(info)
+    requestId = requestId + 1
+
+    local id = requestId
+
+    pendingRequests[id] = {
+        data = nil
+    }
+
+    modem.transmit(102, 103, {
+        command = "fetch",
+        body = {
+            text = info,
+            id = id
+        }
+    })
+
+    return id
+end
+
+function network.get(id)
+    local request = pendingRequests[id]
+
+    if not request then
+        return nil
+    end
+
+    return request.data
 end
 
 local function loadModule(role)
@@ -147,7 +195,8 @@ local function handlePing(message)
         if computer.module.init then
             computer.module:init({
                 role = role,
-                ui = ctx
+                ui = ctx,
+                network = network
             })
         end
     else
@@ -186,64 +235,58 @@ local function removeOffline()
 end
 
 local function handleTouch(x, y)
-    -- Top bar is rows 1-2
-    if y > 2 then
+    if y > barHeight then
+        local computer = computers[selectedRole]
+
+        if computer and computer.module and computer.module.click then
+            computer.module:click(x, y)
+        end
+    end
+
+    if #roles == 0 then
         return
     end
 
-    local currentX = 1
+    if x <= barWidth then
+        local currentIndex = 1
 
-    for role, computer in pairs(computers) do
-        local width = #role + 2
-
-        if x >= currentX and x < currentX + width then
-            selectedRole = role
-            return
+        for i, role in ipairs(roles) do
+            if role == selectedRole then
+                currentIndex = i
+                break
+            end
         end
 
-        currentX = currentX + width
+        currentIndex = currentIndex - 1
+
+        if currentIndex < 1 then
+            currentIndex = #roles
+        end
+
+        selectedRole = roles[currentIndex]
+
+    elseif x > ctx.width - barWidth then
+        local currentIndex = 1
+
+        for i, role in ipairs(roles) do
+            if role == selectedRole then
+                currentIndex = i
+                break
+            end
+        end
+
+        currentIndex = currentIndex + 1
+
+        if currentIndex > #roles then
+            currentIndex = 1
+        end
+
+        selectedRole = roles[currentIndex]
     end
 end
 
 local function draw()
     box:clear(colors.black)
-
-    ctx:fill(
-        1,
-        1,
-        ctx.width,
-        2,
-        colors.gray
-    )
-
-    local x = 1
-
-    for _, role in ipairs(roles) do
-        local computer = computers[role]
-        local width = #role + 2
-        local color = colors.lightGray
-
-        if role == selectedRole then
-            color = colors.blue
-        end
-
-        ctx:fill(
-            x,
-            1,
-            width,
-            2,
-            color
-        )
-
-        ctx:text(
-            x + 1,
-            1,
-            role,
-            colors.white
-        )
-
-        x = x + width
-    end
 
     if selectedRole then
         local computer = computers[selectedRole]
@@ -253,20 +296,49 @@ local function draw()
         end
     end
 
+    ctx:fill(1, 1, barWidth, barHeight, colors.red)
+    ctx:fill(barWidth + 1, 1, ctx.width - (barWidth * 2), barHeight, colors.gray)
+    ctx:fill(ctx.width - barWidth + 1, 1, barWidth, barHeight, colors.red)
+
     box:render()
+
+    if selectedRole then
+        local computer = computers[selectedRole]
+
+        if computer and computer.module and computer.module.draw then
+            computer.module:text()
+        end
+    end
+
+    if selectedRole and computers[selectedRole] then
+        local name = computers[selectedRole].module.name
+        monitor.setCursorPos(math.floor((monitorWidth - #name) / 2) + 1, 1)
+        monitor.setTextColor(colors.white)
+        monitor.setBackgroundColor(colors.gray)
+        monitor.write(name)
+    end
 end
 
 
 local function networkLoop()
     while true do
         local event, a, b, c, d, e = os.pullEvent()
-
         if event == "modem_message" then
             local channel = b
-            local message = e
+            local message = d
 
             if channel == 102 then
                 handlePing(message)
+            end
+
+            if channel == 103 then
+                if type(message) == "table" and message.command == "return" then
+                    local request = pendingRequests[message.body.id]
+
+                    if request then
+                        request.data = message.body.text
+                    end
+                end
             end
 
             if type(message) == "table" and message.command == "reboot" then

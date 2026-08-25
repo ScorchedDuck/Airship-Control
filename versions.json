@@ -6,11 +6,11 @@
         "idBlock": "computercraft:computer_advanced"
     },
     "networkController": {
-        "version": 0.13,
+        "version": 0.14,
         "idBlock": "computercraft:wired_modem_full"
     },
     "monitor": {
-        "version": 0.17,
+        "version": 0.18,
         "idBlock": "computercraft:monitor_advanced"
     },
 

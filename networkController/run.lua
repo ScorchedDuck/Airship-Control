@@ -61,13 +61,18 @@ local function process()
                 state.registered[message.body.name] = os.clock()
 
             elseif message and message.command == "fetch" then
-                modem.transmit(replyChannel, channel, {
-                    command = "return",
-                    body = {
-                        name = role,
-                        text = state[message.body.text]
-                    }
-                }) 
+                local requested = message.body.text
+
+                if state[requested] then
+                    modem.transmit(replyChannel, channel, {
+                        command = "return",
+                        body = {
+                            name = vars.role,
+                            text = state[requested],
+                            id = message.body.id
+                        }
+                    })
+                end
             end
         else
             sleep(0.05)
