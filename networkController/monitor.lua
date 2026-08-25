@@ -6,7 +6,6 @@ return {
         self.role = ctx.role
         self.network = ctx.network
 
-        self.collected = true
         self.next = 0
         self.current = {}
     end,
@@ -14,10 +13,9 @@ return {
     draw = function(self)
         local ui = self.ctx
 
-        if os.clock() >= self.next and self.collected then
+        if os.clock() >= self.next then
             self.requestId = self.network.request("registered")
             self.next = os.clock() + 10
-            self.collected = false
         end
 
         ui:clear(colors.black)
@@ -38,11 +36,11 @@ return {
 
         ui:text(1, y, "Connected Computers:", colors.white)
 
-        local data = self.network.get(self.requestId)
+        if self.requestId then
+            local data = self.network.get(self.requestId)
+        end
 
-        if data and collected == false then
-            self.collected = true
-
+        if data then
             self.current = {}
 
             print("DATA:", textutils.serialize(data))
@@ -50,6 +48,8 @@ return {
             for name in pairs(data) do
                 self.current[#self.current + 1] = name
             end
+
+            self.requestId = 0
         end
 
         if #self.current > 0 then

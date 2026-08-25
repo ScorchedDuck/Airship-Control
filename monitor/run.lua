@@ -113,7 +113,7 @@ function network.get(id)
 end
 
 local function loadModule(role)
-    local url = BASE_PATH .. role .. "/monitor.lua"
+    local url = BASE_PATH .. role .. "/monitor.lua?t=" .. os.clock()
 
     local response = http.get(url)
 
