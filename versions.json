@@ -6,7 +6,7 @@
         "idBlock": "computercraft:computer_advanced"
     },
     "networkController": {
-        "version": 0.17,
+        "version": 0.18,
         "idBlock": "computercraft:wired_modem_full"
     },
     "monitor": {

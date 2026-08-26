@@ -7,7 +7,7 @@ local messageQueue = {}
 
 local state = {
     registered = {
-        os.computerID() = {
+        [os.computerID()] = {
             name = "networkController",
             time = 0
         }
