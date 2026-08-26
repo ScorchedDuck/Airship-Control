@@ -204,11 +204,14 @@ local function propeller()
     state = {
         thrust = 0,
         rpm = 0,
-        sails = 0,
+        sails = 1,
         targetHeight = 0
     }
 
     while true do
+        if state.sails == 0 then
+            state.sails = 1
+        end
         calculateRPM()
         speedContoller.setTargetSpeed(state.rpm)
         sleep(0)

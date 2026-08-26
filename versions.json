@@ -1,5 +1,5 @@
 {
-    "startup": 0.72,
+    "startup": 0.73,
 
     "command": {
         "version": 0.20,
@@ -33,7 +33,7 @@
     },
 
     "propellerCommander": {
-        "version": 0.13,
+        "version": 0.14,
         "idBlock": "create:rotation_speed_controller"
     },
     "flPropeller": {

@@ -126,7 +126,7 @@ local onlineVersion = nil
 for name, data in pairs(versions) do
     if name ~= "startup" and data.idBlock == idBlock then
         role = name
-        if name:find("propeller") then
+        if name:find("propeller") or name:find("Propeller") then
             onlineVersion = versions["propellerCommander"].version
         else
             onlineVersion = data.version
