@@ -87,7 +87,7 @@ local function getScript(role)
     if role:find("propeller") or role:find("Propeller") then
         sRole = "propeller"
     end
-    local response = http.get(PATH .. "/" .. sRole .. "/run.lua")
+    local response = http.get(PATH .. "/" .. sRole .. "/run.lua?t=" .. os.epoch("utc"))
     if not response then
         rebootLoop("Couldn't download ".. PATH .. "/" .. sRole .. "/run.lua - entering reboot loop")
     end
