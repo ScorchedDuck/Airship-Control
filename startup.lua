@@ -35,14 +35,14 @@ local function getVersions()
     if not response then
         rebootLoop("Couldn't download versions.json - entering reboot loop")
     end
-    data = response.readAll()
+    local data = response.readAll()
     if data == "" then
         rebootLoop("Couldn't download versions.json - entering reboot loop")
     end
 
     response.close()
 
-    local data = textutils.unserializeJSON(data)
+    data = textutils.unserializeJSON(data)
     
 
     return data
@@ -83,13 +83,17 @@ local function updateVars()
 end
 
 local function getScript(role)
-    local response = http.get(PATH .. "/" .. role .. "/run.lua")
+    local sRole = role
+    if role:find("propeller") or role:find("Propeller") then
+        sRole = "propeller"
+    end
+    local response = http.get(PATH .. "/" .. sRole .. "/run.lua")
     if not response then
-        rebootLoop("Couldn't download ".. PATH .. "/" .. role .. "/run.lua - entering reboot loop")
+        rebootLoop("Couldn't download ".. PATH .. "/" .. sRole .. "/run.lua - entering reboot loop")
     end
     data = response.readAll()
     if data == "" then
-        rebootLoop("Couldn't download ".. PATH .. "/" .. role .. "/run.lua - entering reboot loop")
+        rebootLoop("Couldn't download ".. PATH .. "/" .. sRole .. "/run.lua - entering reboot loop")
     end
 
     response.close()
@@ -117,10 +121,16 @@ local versions = getVersions()
 
 loadVars()
 
+local onlineVersion = nil
+
 for name, data in pairs(versions) do
     if name ~= "startup" and data.idBlock == idBlock then
         role = name
-        onlineVersion = data.version
+        if "propeller" in name then
+            onlineVersion = versions["propellerCommander"].version
+        else
+            onlineVersion = data.version
+        end
         break
     end
 end

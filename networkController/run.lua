@@ -1,7 +1,3 @@
-local BASE_PATH = "https://raw.githubusercontent.com/ScorchedDuck/Airship-Control/main/"
-
-local disk = peripheral.find("drive")
-
 local modem = peripheral.find("modem")
 modem.open(100) -- command channel
 modem.open(101) -- register channel
@@ -10,7 +6,12 @@ modem.open(102) -- monitor channel
 local messageQueue = {}
 
 local state = {
-    registered = {}
+    registered = {
+        os.computerID() = {
+            name = "networkController",
+            time = 0
+        }
+    }
 }
 
 local VARS = "vars.json"
@@ -82,7 +83,7 @@ local function removeDeadComputers()
         local now = os.clock()
 
         for id, data in pairs(state.registered) do
-            if now - data.time > 15 then
+            if now - data.time > 15 and data.name ~= "networkController" then
                 state.registered[id] = nil
                 print(data.name .. " timed out")
             end
