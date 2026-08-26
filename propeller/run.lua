@@ -210,6 +210,11 @@ local function propeller()
 
     while true do
         calculateRPM()
+        if state.rpm > 256 then
+            state.rpm = 256
+        elseif state.rpm < -256 then
+            state.rpm = -256
+        end
         speedContoller.setTargetSpeed(state.rpm)
         sleep(0)
     end
