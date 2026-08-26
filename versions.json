@@ -33,7 +33,7 @@
     },
 
     "propellerCommander": {
-        "version": 0.12,
+        "version": 0.13,
         "idBlock": "create:rotation_speed_controller"
     },
     "flPropeller": {

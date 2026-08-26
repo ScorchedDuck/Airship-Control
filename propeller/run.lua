@@ -159,7 +159,7 @@ local function propellerCommander()
         local rollOut  = updatePID(PID.roll, rollError, dt) * state.rollMultiplier
         local heightOut  = updatePID(PID.height, heightError, dt) 
 
-        local weight = state.totalMass * math.abs(getGravity().y)
+        local weight = state.totalMass * math.abs(aero.getGravity().y)
 
         weight = weight / 4
 
