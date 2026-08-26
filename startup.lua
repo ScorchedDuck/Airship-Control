@@ -31,7 +31,7 @@ local function rebootLoop(message)
 end
 
 local function getVersions()
-    local response = http.get(PATH .. "/versions.json")
+    local response = http.get(PATH .. "/versions.json?t=" .. os.epoch("utc"))
     if not response then
         rebootLoop("Couldn't download versions.json - entering reboot loop")
     end
