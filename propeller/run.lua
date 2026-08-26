@@ -78,7 +78,7 @@ local function monitor()
     while true do
         modem.transmit(102, 0, {
             command = "monitor",
-            role = vars.role
+            role = "propeller"
         })
         sleep(10)
     end
@@ -125,8 +125,8 @@ local function propellerCommander()
     }
 
     local PID = {
-        pitch = {P = 0.3, I = 0.001, D = 1, integral = 0, last_error = 0},
-        roll  = {P = 0.3, I = 0.001, D = 1, integral = 0, last_error = 0},
+        pitch = {P = 60, I = 0.001, D = 1, integral = 0, last_error = 0},
+        roll  = {P = 60, I = 0.001, D = 1, integral = 0, last_error = 0},
         height  = {P = 0.1, I = 0.001, D = 0.5, integral = 0, last_error = 0}
     }
 
