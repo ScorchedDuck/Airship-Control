@@ -141,7 +141,7 @@ local function updateVars()
 end
 
 local function loadModule(role)
-    local url = BASE_PATH .. role .. "/monitor.lua?t=" .. os.clock()
+    local url = BASE_PATH .. role .. "/monitor.lua?t=" .. os.epoch("utc")
 
     local response = http.get(url)
 

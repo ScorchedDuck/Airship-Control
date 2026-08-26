@@ -67,7 +67,7 @@ local function uploadStartup()
             fs.delete("startup_download.lua")
         end
 
-        local response = http.get(DEFAULT_STARTUP_PATH)
+        local response = http.get(DEFAULT_STARTUP_PATH .. "?t=" .. os.epoch("utc"))
 
         if not response then
             error("Couldn't download startup.lua")

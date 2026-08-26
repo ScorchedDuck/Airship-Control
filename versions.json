@@ -2,7 +2,7 @@
     "startup": 0.71,
 
     "command": {
-        "version": 0.19,
+        "version": 0.20,
         "idBlock": "computercraft:computer_advanced"
     },
     "networkController": {
@@ -10,7 +10,7 @@
         "idBlock": "computercraft:wired_modem_full"
     },
     "monitor": {
-        "version": 0.26,
+        "version": 0.27,
         "idBlock": "computercraft:monitor_advanced"
     },
 
