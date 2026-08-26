@@ -193,7 +193,7 @@ local function propeller()
         local position = vector.new(0, state.targetHeight, 0)
         local pressure = aero.getAirPressure(position)
 
-        state.rpm =  state.thrust / (0.2 * (sails ^ 1.5) * pressure)
+        state.rpm =  state.thrust / (0.2 * (state.sails ^ 1.5) * pressure)
 
         if state.rpm < 0 then
             state.rpm = state.rpm * -1
@@ -209,9 +209,6 @@ local function propeller()
     }
 
     while true do
-        if state.sails == 0 then
-            state.sails = 1
-        end
         calculateRPM()
         speedContoller.setTargetSpeed(state.rpm)
         sleep(0)
