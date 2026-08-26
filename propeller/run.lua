@@ -49,7 +49,7 @@ local function modemLoop()
                 })
             end
         end
-        if message and message.command == "propellers" and not "Commander" in vars.role then
+        if message and message.command == "propellers" and not vars.role:find("Commander") then
             local data = message.body.text
             if vars.role:find("fl") then
                 state.thrust = data.motors.fl
