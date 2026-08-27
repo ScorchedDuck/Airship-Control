@@ -125,8 +125,8 @@ local function propellerCommander()
     }
 
     local PID = {
-        pitch = {P = 60, I = 0.001, D = 1, integral = 0, last_error = 0},
-        roll  = {P = 60, I = 0.001, D = 1, integral = 0, last_error = 0},
+        pitch = {P = 35, I = 0.001, D = 1, integral = 0, last_error = 0},
+        roll  = {P = 35, I = 0.001, D = 1, integral = 0, last_error = 0},
         height  = {P = 0.1, I = 0.001, D = 0.5, integral = 0, last_error = 0}
     }
 
